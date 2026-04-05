@@ -1,0 +1,120 @@
+{
+  "name": "Bot WhatsApp - FinVision",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-bot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "cc6f50c7-7c32-4422-8d3b-eb638f59d24e",
+      "name": "Webhook Z-API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "whatsapp-bot"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\n\n// Pega a mensagem recebida\nconst mensagem = (body.text?.message || body.message || '').toLowerCase().trim();\nconst telefone = body.phone || body.from || '';\n\n// Regras do bot\nconst regras = [\n  {\n    gatilho: ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'hello', 'hi'],\n    resposta: '👋 Olá! Bem-vindo(a) à FinVision!\\n\\nComo posso te ajudar?\\n\\n1️⃣ - Preços e planos\\n2️⃣ - Horários de atendimento\\n3️⃣ - Falar com um consultor\\n4️⃣ - Sobre nossos serviços'\n  },\n  {\n    gatilho: ['preço', 'preco', 'plano', 'valor', 'quanto', 'custo', '1'],\n    resposta: '💰 *Nossos Planos:*\\n\\n• *Essencial* — R$497/mês\\n  Ideal para autônomos e MEIs\\n\\n• *Profissional* — R$1.290/mês\\n  Para pequenas empresas\\n\\n• *Empresarial* — R$2.890/mês\\n  Para médias empresas\\n\\nQuer saber mais detalhes de algum plano? 😊'\n  },\n  {\n    gatilho: ['horário', 'horario', 'hora', 'funciona', 'aberto', '2'],\n    resposta: '⏰ *Horários de Atendimento:*\\n\\n📅 Segunda a Sexta: 8h às 18h\\n📅 Sábado: 9h às 13h\\n\\nFora desse horário, deixe sua mensagem que retornamos assim que possível! 🙏'\n  },\n  {\n    gatilho: ['consultor', 'atendente', 'humano', 'pessoa', 'falar', '3'],\n    resposta: '👤 Certo! Vou te conectar com um de nossos consultores.\\n\\n⏳ Tempo médio de espera: *3 minutos*\\n\\nPor favor, aguarde. Em breve alguém vai te atender! 😊'\n  },\n  {\n    gatilho: ['serviço', 'servico', 'oferece', 'faz', 'o que', '4'],\n    resposta: '📊 *Nossos Serviços:*\\n\\n✅ Consultoria Financeira\\n✅ Planejamento de Investimentos\\n✅ Controle de Fluxo de Caixa\\n✅ BPO Financeiro\\n✅ Crédito e Financiamento\\n✅ Gestão de Riscos\\n\\nQuer saber mais sobre algum serviço específico?'\n  }\n];\n\n// Verifica qual regra se encaixa\nlet resposta = null;\nfor (const regra of regras) {\n  for (const gatilho of regra.gatilho) {\n    if (mensagem.includes(gatilho)) {\n      resposta = regra.resposta;\n      break;\n    }\n  }\n  if (resposta) break;\n}\n\n// Resposta padrão se nenhuma regra bater\nif (!resposta) {\n  resposta = '🤖 Desculpe, não entendi sua mensagem.\\n\\nTente uma dessas opções:\\n\\n1️⃣ - Preços e planos\\n2️⃣ - Horários\\n3️⃣ - Falar com consultor\\n4️⃣ - Nossos serviços\\n\\nOu digite *oi* para recomeçar! 😊';\n}\n\nreturn [{ json: { telefone, resposta, mensagemOriginal: mensagem } }];"
+      },
+      "id": "94888bd6-a759-4e9e-8210-ac851611b194",
+      "name": "Lógica do Bot",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.z-api.io/instances/3F11825C80FFF136BD4E6A4BBBB470FB/token/76A1ADCEC052FB0071AF48F3/send-text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $json.telefone }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.resposta }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7a7afe82-07fc-4fd8-8865-7ea81848644c",
+      "name": "Enviar Resposta Z-API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"ok\" }",
+        "options": {}
+      },
+      "id": "4e0979e0-b019-4b0b-b414-5b7042972c74",
+      "name": "Responder Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        720,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Lógica do Bot": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resposta Z-API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Resposta Z-API": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8f81e448-aba4-4ad0-8e46-819b66814eb0",
+  "meta": {
+    "instanceId": "73278b622c4b072943414a2c7eb6850b5bb4c501ed978e83da694edab81b0d08"
+  },
+  "id": "y99g3KhGaug9aG33",
+  "tags": []
+}
