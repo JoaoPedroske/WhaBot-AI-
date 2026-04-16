@@ -1,11 +1,11 @@
 [README_WhaBot.md](https://github.com/user-attachments/files/26771915/README_WhaBot.md)
-# 💬 WhaBot AI
+#  WhaBot AI
 
 > Bot de atendimento automático para WhatsApp que responde clientes em segundos — com palavras-chave, preços, horários e redirecionamento humano.
 
 ---
 
-## 📌 Sobre o projeto
+##  Sobre o projeto
 
 O **WhaBot AI** é um bot de atendimento construído com **Z-API**, **n8n** e **Make** que automatiza o primeiro contato com clientes no WhatsApp.
 
@@ -15,7 +15,7 @@ Ideal para pequenos negócios, lojas e prestadores de serviço que recebem alto 
 
 ---
 
-## ⚙️ Como funciona
+##  Como funciona
 
 ```
 Cliente envia mensagem no WhatsApp
@@ -35,7 +35,7 @@ Z-API envia resposta automática ao cliente
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+##  Tecnologias utilizadas
 
 | Ferramenta | Função |
 |---|---|
@@ -45,7 +45,7 @@ Z-API envia resposta automática ao cliente
 
 ---
 
-## ✨ Funcionalidades
+##  Funcionalidades
 
 - ✅ Resposta automática baseada em palavras-chave
 - ✅ Informações sobre preços, horários e localização
@@ -55,7 +55,7 @@ Z-API envia resposta automática ao cliente
 
 ---
 
-## 🚀 Como usar
+##  Como usar
 
 ### Pré-requisitos
 
@@ -74,7 +74,7 @@ Z-API envia resposta automática ao cliente
 
 ---
 
-## 📁 Estrutura do projeto
+##  Estrutura do projeto
 
 ```
 WhaBot-AI/
@@ -84,13 +84,13 @@ WhaBot-AI/
 
 ---
 
-## 👤 Autor
+##  Autor
 
 **João Pedro Silva dos Santos**  
 [GitHub](https://github.com/JoaoPedroske) · [Email](mailto:joaopedrosilvadossantos94@gmail.com)
 
 ---
 
-## 📄 Licença
+##  Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
